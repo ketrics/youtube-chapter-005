@@ -1,0 +1,53 @@
+service: myapi
+
+custom:
+  defaultStage: dev
+  currentStage: ${opt:stage, self:custom.defaultStage}
+  TODOS_TABLENAME: ${self:custom.currentStage}-ToDos
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  profile: default
+  region: us-east-1
+  memorySize: 128
+  timeout: 10
+
+  environment:
+    TODOS_TABLENAME: ${self:custom.TODOS_TABLENAME}
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:ListStreams"
+        - "dynamodb:Scan"
+        - "dynamodb:Query"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.TODOS_TABLENAME}"
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    ToDosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: 'id'
+          AttributeType: 'S'
+        KeySchema:
+        - AttributeName: 'id'
+          KeyType: 'HASH'
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.TODOS_TABLENAME}
