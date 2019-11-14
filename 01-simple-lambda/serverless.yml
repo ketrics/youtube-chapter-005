@@ -1,0 +1,12 @@
+service: myapi
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+  environment:
+    variable1: value1
+
+functions:
+  hello:
+    handler: handler.hello

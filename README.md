@@ -1,28 +1,8 @@
-## Create a Serverless Api in AWS using Serverless Framework
+## Serverles Framework Lambda function examples
 
-### Create Command
-Create sls sample files based in the aws-nodejs sample:
-    sls create -t aws-nodejs -n myapi
+### 01-simple-lambra
+Just a lambda without triggers
 
-### serverless.yml
-After removing all the comments we will have the following code:
-
-    service: myapi
-
-    provider:
-    name: aws
-    runtime: nodejs10.x
-
-    environment:
-        variable1: value1
-
-    functions:
-    hello:
-        handler: handler.hello
-
-### Deploy command
-    sls deploy
-
-### Remove command
-    sls remove
+### 02-api-triggered-lambda
+Lambda function with Api Gateway trigger and a DynamoDB table
 
